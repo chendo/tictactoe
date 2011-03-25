@@ -1,4 +1,9 @@
 class TicTacToe
+    
+  def self.play
+    new.play
+  end
+
   class Board
     def initialize
       @board = [[nil,nil,nil],
@@ -11,9 +16,12 @@ class TicTacToe
     end
   end
 
-  def self.play
-    board = Board.new
+  def initialize
+    @board = Board.new
+  end
 
+  def play
+    
     left_diagonal = [[0,0],[1,1],[2,2]]
     right_diagonal = [[2,0],[1,1],[0,2]]
 
@@ -23,13 +31,13 @@ class TicTacToe
     current_player = players.next 
 
     loop do
-      puts board.map { |row| row.map { |e| e || " " }.join("|") }.join("\n")
+      puts @board.map { |row| row.map { |e| e || " " }.join("|") }.join("\n")
       print "\n>> "
       row, col = gets.split.map { |e| e.to_i }
       puts
 
       begin
-        cell_contents = board.fetch(row).fetch(col)
+        cell_contents = @board.fetch(row).fetch(col)
       rescue IndexError
         puts "Out of bounds, try another position"
         next
@@ -40,7 +48,7 @@ class TicTacToe
         next
       end
 
-      board[row][col] = current_player
+      @board[row][col] = current_player
 
       lines = []
 
@@ -52,7 +60,7 @@ class TicTacToe
       lines << (0..2).map { |r1| [r1, col] }
 
       win = lines.any? do |line|
-        line.all? { |row,col| board[row][col] == current_player }
+        line.all? { |row,col| @board[row][col] == current_player }
       end
 
       if win
@@ -60,7 +68,7 @@ class TicTacToe
         exit
       end
 
-      if board.flatten.compact.length == 9
+      if @board.flatten.compact.length == 9
         puts "It's a draw!"
         exit
       end
