@@ -11,6 +11,10 @@ class TicTacToe
                 [nil,nil,nil]]
     end
 
+    def draw!
+      puts @board.map { |row| row.map { |e| e || " " }.join("|") }.join("\n")
+    end
+
     def method_missing(*args, &block)
       @board.send(*args, &block)
     end
@@ -31,7 +35,7 @@ class TicTacToe
     current_player = players.next 
 
     loop do
-      puts @board.map { |row| row.map { |e| e || " " }.join("|") }.join("\n")
+      @board.draw!
       print "\n>> "
       row, col = gets.split.map { |e| e.to_i }
       puts
