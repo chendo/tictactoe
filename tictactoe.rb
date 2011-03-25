@@ -1,8 +1,18 @@
 class TicTacToe
+  class Board
+    def initialize
+      @board = [[nil,nil,nil],
+                [nil,nil,nil],
+                [nil,nil,nil]]
+    end
+
+    def method_missing(*args, &block)
+      @board.send(*args, &block)
+    end
+  end
+
   def self.play
-    board   = [[nil,nil,nil],
-               [nil,nil,nil],
-               [nil,nil,nil]]
+    board = Board.new
 
     left_diagonal = [[0,0],[1,1],[2,2]]
     right_diagonal = [[2,0],[1,1],[0,2]]
