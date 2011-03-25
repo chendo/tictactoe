@@ -26,6 +26,8 @@ class TicTacToe
 
   def initialize
     @board = Board.new
+    @players = [:X, :O].cycle
+
   end
 
   def play
@@ -33,10 +35,7 @@ class TicTacToe
     left_diagonal = [[0,0],[1,1],[2,2]]
     right_diagonal = [[2,0],[1,1],[0,2]]
 
-
-    players = [:X, :O].cycle
-
-    current_player = players.next 
+    current_player = @players.next 
 
     loop do
       @board.draw!
@@ -81,7 +80,7 @@ class TicTacToe
         exit
       end
 
-      current_player = players.next 
+      current_player = @players.next 
     end
   end
 end
