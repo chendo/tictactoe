@@ -20,16 +20,24 @@ class TicTacToe
     end
 
     def get(row, col)
+      check_bounds!(row, col)
       @board[row][col]
     end
 
     def set!(row, col, player)
+      check_bounds!(row, col)
       raise "Cell occupied, try another position" if @board[row][col]
       @board[row][col] = player
     end
 
     def draw?
       @board.flatten.compact.length == 9
+    end
+
+    protected
+
+    def check_bounds!(row, col)
+      raise "Out of bounds, try another position" unless (0..2).include?(row) && (0..2).include?(col)
     end
   end
 
