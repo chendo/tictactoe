@@ -19,6 +19,15 @@ class TicTacToe
       @board.send(*args, &block)
     end
 
+    def get(x, y)
+      @board[x][y]
+    end
+
+    def set!(x, y, player)
+      raise "Cell occupied, try another position" if @board[x][y]
+      @board[x][y] = player
+    end
+
     def draw?
       @board.flatten.compact.length == 9
     end
@@ -44,18 +53,11 @@ class TicTacToe
       puts
 
       begin
-        cell_contents = @board.fetch(row).fetch(col)
-      rescue IndexError
-        puts "Out of bounds, try another position"
+        @board.set!(col, row, current_player)
+      rescue Exception => ex
+        puts ex.to_s 
         next
       end
-      
-      if cell_contents
-        puts "Cell occupied, try another position"
-        next
-      end
-
-      @board[row][col] = current_player
 
       lines = []
 
