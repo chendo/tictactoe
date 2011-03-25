@@ -18,6 +18,10 @@ class TicTacToe
     def method_missing(*args, &block)
       @board.send(*args, &block)
     end
+
+    def draw?
+      @board.flatten.compact.length == 9
+    end
   end
 
   def initialize
@@ -72,7 +76,7 @@ class TicTacToe
         exit
       end
 
-      if @board.flatten.compact.length == 9
+      if @board.draw?
         puts "It's a draw!"
         exit
       end
