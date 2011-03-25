@@ -19,13 +19,13 @@ class TicTacToe
       @board.send(*args, &block)
     end
 
-    def get(x, y)
-      @board[x][y]
+    def get(row, col)
+      @board[row][col]
     end
 
-    def set!(x, y, player)
-      raise "Cell occupied, try another position" if @board[x][y]
-      @board[x][y] = player
+    def set!(row, col, player)
+      raise "Cell occupied, try another position" if @board[row][col]
+      @board[row][col] = player
     end
 
     def draw?
@@ -53,7 +53,7 @@ class TicTacToe
       puts
 
       begin
-        @board.set!(col, row, current_player)
+        @board.set!(row, col, current_player)
       rescue Exception => ex
         puts ex.to_s 
         next
@@ -69,7 +69,7 @@ class TicTacToe
       lines << (0..2).map { |r1| [r1, col] }
 
       win = lines.any? do |line|
-        line.all? { |row,col| @board[row][col] == current_player }
+        line.all? { |row,col| @board.get(row, col) == current_player }
       end
 
       if win
