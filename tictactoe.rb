@@ -4,15 +4,22 @@ class TicTacToe
     new.play
   end
 
-  class Board
+  class Board        
+    LINES = [
+              [0,3,6], [1,4,7], [2,5,8], # Vertical
+              [0,1,2], [3,4,5], [6,7,8], # Horizontal
+              [0,4,8], [2,4,6]           # Diagonals
+            ]
+
     def initialize
-      @board = [[nil,nil,nil],
-                [nil,nil,nil],
-                [nil,nil,nil]]
+      @board = [nil] * 9
     end
 
     def draw!
-      puts @board.map { |row| row.map { |e| e || " " }.join("|") }.join("\n")
+      [0,1,2].each do |row|
+        base_position = row * 3
+        puts @board[base_position..(base_position + 2)].map { |cell| cell || ' ' }.join("|")
+      end
     end
 
     def method_missing(*args, &block)
@@ -21,23 +28,36 @@ class TicTacToe
 
     def get(row, col)
       check_bounds!(row, col)
+      position = row_and_col_to_position(row, col)
       @board[row][col]
     end
 
     def set!(row, col, player)
       check_bounds!(row, col)
-      raise "Cell occupied, try another position" if @board[row][col]
-      @board[row][col] = player
+      position = row_and_col_to_position(row, col)
+      raise "Cell occupied, try another position" if @board[position]
+      @board[position] = player
     end
 
     def draw?
-      @board.flatten.compact.length == 9
+      @board.compact.length == 9
+    end
+
+    def victory_for_player?(player)
+      LINES.each do |line|
+        return true if line.all? { |position| @board[position] == player }
+      end
+      false
     end
 
     protected
 
     def check_bounds!(row, col)
       raise "Out of bounds, try another position" unless (0..2).include?(row) && (0..2).include?(col)
+    end
+
+    def row_and_col_to_position(row, col)
+      row * 3 + col
     end
   end
 
@@ -48,9 +68,6 @@ class TicTacToe
   end
 
   def play
-    
-    left_diagonal = [[0,0],[1,1],[2,2]]
-    right_diagonal = [[2,0],[1,1],[0,2]]
 
     current_player = @players.next 
 
@@ -67,20 +84,7 @@ class TicTacToe
         next
       end
 
-      lines = []
-
-      [left_diagonal, right_diagonal].each do |line|
-        lines << line if line.include?([row,col])
-      end
-
-      lines << (0..2).map { |c1| [row, c1] }
-      lines << (0..2).map { |r1| [r1, col] }
-
-      win = lines.any? do |line|
-        line.all? { |row,col| @board.get(row, col) == current_player }
-      end
-
-      if win
+      if @board.victory_for_player?(current_player)
         puts "#{current_player} wins!"
         exit
       end
